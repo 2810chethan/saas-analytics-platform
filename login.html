@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AetherSaaS BI - Authorization</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Google Fonts: Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons via CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* Sliding form state transitions styling */
+    .signup-only {
+      display: none;
+      animation: fieldSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    @keyframes fieldSlideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .state-footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    
+    .state-footer a {
+      color: var(--accent-blue);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    
+    .state-footer a:hover {
+      color: var(--accent-purple);
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body class="login-body">
+  <!-- Background ambient glow blobs -->
+  <div class="glow-blob blob-1"></div>
+  <div class="glow-blob blob-2"></div>
+  <div class="glow-blob blob-3"></div>
+
+  <div class="login-wrapper">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="logo-area">
+          <i data-lucide="layers" class="logo-icon animate-pulse"></i>
+          <span class="logo-text">Aether<span>SaaS</span></span>
+        </div>
+        <p class="login-subtitle" id="cardSubtitle">Intelligence Engine & Churn Prediction Platform</p>
+      </div>
+
+      <!-- Combined Form for Login / Signup -->
+      <form id="authForm" class="login-form">
+        <!-- Signup Only Field: Full Name -->
+        <div class="input-group signup-only" id="groupName">
+          <label for="fullName"><i data-lucide="user"></i> Full Name</label>
+          <input type="text" id="fullName" placeholder="John Doe">
+        </div>
+
+        <!-- Signup Only Field: Company Name -->
+        <div class="input-group signup-only" id="groupCompany">
+          <label for="companyName"><i data-lucide="building"></i> Company Name</label>
+          <input type="text" id="companyName" placeholder="Acme Analytics">
+        </div>
+
+        <!-- Shared Field: Email Address -->
+        <div class="input-group">
+          <label for="email"><i data-lucide="mail"></i> Email Address</label>
+          <input type="email" id="email" placeholder="management@aethersaas.io" required value="management@aethersaas.io">
+        </div>
+
+        <!-- Shared Field: Password -->
+        <div class="input-group">
+          <label for="password"><i data-lucide="lock"></i> Password</label>
+          <input type="password" id="password" placeholder="••••••••" required value="password123">
+        </div>
+
+        <div class="forgot-row" id="forgotRow">
+          <label class="checkbox-container">
+            <input type="checkbox" checked>
+            <span class="checkmark"></span>
+            Keep me signed in
+          </label>
+          <a href="#" class="forgot-link">Forgot Password?</a>
+        </div>
+
+        <button type="submit" class="btn-primary" id="submitBtn">
+          <span>Sign In to Dashboard</span>
+          <i data-lucide="arrow-right"></i>
+        </button>
+      </form>
+
+      <div class="divider">
+        <span>or</span>
+      </div>
+
+      <!-- Google Brand Compliance Sign-In Button -->
+      <button type="button" class="btn-google" id="googleBtn">
+        <svg class="google-icon" viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+        </svg>
+        <span>Continue with Google</span>
+      </button>
+
+      <!-- Toggle State Switcher -->
+      <div class="state-footer">
+        <span id="stateQuestion">Don't have an account?</span>
+        <a href="#" id="stateToggleBtn">Sign Up</a>
+      </div>
+
+      <div class="login-footer">
+        <p>Authorized access only. Technical support: <a href="mailto:support@aethersaas.io">support@aethersaas.io</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Simulated Authentication Overlay Popup -->
+  <div class="overlay" id="authOverlay">
+    <div class="auth-popup">
+      <div class="auth-spinner-wrapper">
+        <div class="google-loading-ring">
+          <div></div><div></div><div></div><div></div>
+        </div>
+      </div>
+      <h3 class="auth-title" id="authTitle">Connecting</h3>
+      <p class="auth-text" id="authText">Authenticating secure session...</p>
+      
+      <!-- Success Checked Animation -->
+      <div class="success-checkmark" id="successCheckmark">
+        <div class="check-icon">
+          <span class="icon-line line-tip"></span>
+          <span class="icon-line line-long"></span>
+          <div class="icon-circle"></div>
+          <div class="icon-fix"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Check if user is already logged in
+    if (localStorage.getItem('saas_token')) {
+      window.location.href = 'index.html';
+    }
+
+    let isSignupMode = false;
+
+    const authForm = document.getElementById('authForm');
+    const stateToggleBtn = document.getElementById('stateToggleBtn');
+    const stateQuestion = document.getElementById('stateQuestion');
+    const cardSubtitle = document.getElementById('cardSubtitle');
+    const submitBtn = document.getElementById('submitBtn');
+    const googleBtn = document.getElementById('googleBtn');
+    const forgotRow = document.getElementById('forgotRow');
+    
+    // Form Inputs
+    const fullNameInput = document.getElementById('fullName');
+    const companyNameInput = document.getElementById('companyName');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const signupFields = document.querySelectorAll('.signup-only');
+
+    // Overlay Elements
+    const authOverlay = document.getElementById('authOverlay');
+    const authTitle = document.getElementById('authTitle');
+    const authText = document.getElementById('authText');
+    const successCheckmark = document.getElementById('successCheckmark');
+    const spinner = document.querySelector('.auth-spinner-wrapper');
+
+    // State Switcher Event Listener
+    stateToggleBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      isSignupMode = !isSignupMode;
+
+      if (isSignupMode) {
+        // Switch to Sign Up state
+        signupFields.forEach(field => field.style.display = 'flex');
+        fullNameInput.setAttribute('required', 'true');
+        companyNameInput.setAttribute('required', 'true');
+        
+        cardSubtitle.innerText = 'Create your new enterprise workspace';
+        submitBtn.innerHTML = '<span>Create Free Account</span> <i data-lucide="arrow-right"></i>';
+        stateQuestion.innerText = 'Already have an account?';
+        stateToggleBtn.innerText = 'Sign In';
+        forgotRow.style.display = 'none';
+
+        // Clear values for fresh signup
+        emailInput.value = '';
+        passwordInput.value = '';
+      } else {
+        // Switch back to Login state
+        signupFields.forEach(field => field.style.display = 'none');
+        fullNameInput.removeAttribute('required');
+        companyNameInput.removeAttribute('required');
+        
+        cardSubtitle.innerText = 'Intelligence Engine & Churn Prediction Platform';
+        submitBtn.innerHTML = '<span>Sign In to Dashboard</span> <i data-lucide="arrow-right"></i>';
+        stateQuestion.innerText = "Don't have an account?";
+        stateToggleBtn.innerText = 'Sign Up';
+        forgotRow.style.display = 'flex';
+
+        // Pre-fill default credentials
+        emailInput.value = 'management@aethersaas.io';
+        passwordInput.value = 'password123';
+      }
+      lucide.createIcons();
+    });
+
+    function runSimulatedAuth(authMethod) {
+      authOverlay.classList.add('active');
+      spinner.style.display = 'block';
+      successCheckmark.style.display = 'none';
+      
+      if (authMethod === 'Google') {
+        authTitle.innerText = 'Connecting with Google';
+        authText.innerText = 'Requesting secure account permissions...';
+      } else if (authMethod === 'Signup') {
+        authTitle.innerText = 'Creating Account';
+        authText.innerText = 'Provisioning new enterprise cloud database...';
+      } else {
+        authTitle.innerText = 'Authenticating Credentials';
+        authText.innerText = 'Verifying security signature and key...';
+      }
+
+      // Step 2 (1.8s later): Success checkmark
+      setTimeout(() => {
+        spinner.style.display = 'none';
+        successCheckmark.style.display = 'block';
+        authTitle.innerText = authMethod === 'Signup' ? 'Account Created!' : 'Authorized Successfully';
+        
+        if (authMethod === 'Google') {
+          authText.innerText = 'Google session established. Redirecting...';
+          localStorage.setItem('saas_token', 'google_jwt_token_aether_983274');
+          localStorage.setItem('saas_user_name', 'Chethan Kalyan');
+          localStorage.setItem('saas_user_email', 'chethan.kalyan@gmail.com');
+          localStorage.setItem('saas_user_pic', 'google');
+        } else if (authMethod === 'Signup') {
+          const registeredName = fullNameInput.value;
+          const registeredEmail = emailInput.value;
+          
+          authText.innerText = 'Workspace provisioned. Initializing dashboard...';
+          localStorage.setItem('saas_token', 'signup_token_aether_784902');
+          localStorage.setItem('saas_user_name', registeredName);
+          localStorage.setItem('saas_user_email', registeredEmail);
+          localStorage.setItem('saas_user_pic', 'custom');
+        } else {
+          authText.innerText = 'User credentials verified. Redirecting...';
+          localStorage.setItem('saas_token', 'custom_jwt_token_aether_123490');
+          localStorage.setItem('saas_user_name', 'SaaS Manager');
+          localStorage.setItem('saas_user_email', 'management@aethersaas.io');
+          localStorage.setItem('saas_user_pic', 'custom');
+        }
+        
+        // Step 3 (3s later): Redirect to dashboard
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 1200);
+      }, 1800);
+    }
+
+    authForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (isSignupMode) {
+        runSimulatedAuth('Signup');
+      } else {
+        runSimulatedAuth('Credentials');
+      }
+    });
+
+    googleBtn.addEventListener('click', () => {
+      runSimulatedAuth('Google');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AetherSaaS BI - Enterprise Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Google Fonts: Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons via CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- BACKGROUND AMBIENT GLOWS -->
+    <div class="glow-blob blob-1"></div>
+    <div class="glow-blob blob-2"></div>
+    <div class="glow-blob blob-3"></div>
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="sidebar-header">
+          <i data-lucide="layers" class="logo-icon animate-pulse"></i>
+          <span class="logo-text">Aether<span>SaaS</span></span>
+        </div>
+        
+        <nav>
+          <ul class="nav-list">
+            <li class="nav-item active" data-tab="overview">
+              <a class="nav-link"><i data-lucide="layout-dashboard"></i><span>Overview</span></a>
+            </li>
+            <li class="nav-item" data-tab="subscriptions">
+              <a class="nav-link"><i data-lucide="credit-card"></i><span>Revenue & Plans</span></a>
+            </li>
+            <li class="nav-item" data-tab="retention">
+              <a class="nav-link"><i data-lucide="users-2"></i><span>Retention Cohorts</span></a>
+            </li>
+            <li class="nav-item" data-tab="churn">
+              <a class="nav-link"><i data-lucide="shield-alert"></i><span>Churn Prediction</span></a>
+            </li>
+            <li class="nav-item" data-tab="whatif">
+              <a class="nav-link"><i data-lucide="sliders-horizontal"></i><span>What-If Planner</span></a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="user-avatar-wrapper">
+            <div class="user-avatar" id="avatarIcon">M</div>
+          </div>
+          <div class="user-details">
+            <span class="user-name" id="profileName">SaaS Admin</span>
+            <span class="user-role" id="profileEmail">admin@aethersaas.io</span>
+          </div>
+        </div>
+        
+        <button class="btn-logout" id="logoutBtn">
+          <i data-lucide="log-out"></i>
+          <span>Log Out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN DASHBOARD CONTENT AREA -->
+    <main class="main-content">
+      <header class="main-header">
+        <div class="header-title-area">
+          <h1 id="welcomeText">Dashboard</h1>
+          <p id="welcomeSubtext">Loading SaaS Intelligence Engine...</p>
+        </div>
+        <div class="header-actions">
+          <div class="time-badge">
+            <i data-lucide="calendar"></i>
+            <span id="currentTime">June 2026</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- ================== TAB 1: OVERVIEW ================== -->
+      <section class="tab-content active" id="tab-overview">
+        <div class="stats-grid">
+          <!-- MRR KPI -->
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Monthly Recurring Revenue</span>
+              <div class="kpi-icon-container purple"><i data-lucide="coins"></i></div>
+            </div>
+            <div class="kpi-value" id="kpi-mrr">$0</div>
+            <div class="kpi-footer">
+              <span class="kpi-trend positive" id="trend-mrr"><i data-lucide="arrow-up-right"></i> +0.0%</span>
+              <span class="kpi-context">Month-over-Month</span>
+            </div>
+          </div>
+          
+          <!-- Active Customers KPI -->
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Active Customers</span>
+              <div class="kpi-icon-container blue"><i data-lucide="users"></i></div>
+            </div>
+            <div class="kpi-value" id="kpi-customers">0</div>
+            <div class="kpi-footer">
+              <span class="kpi-trend positive" id="trend-customers"><i data-lucide="arrow-up-right"></i> +0.0%</span>
+              <span class="kpi-context">Month-over-Month</span>
+            </div>
+          </div>
+
+          <!-- LTV KPI -->
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Customer Lifetime Value</span>
+              <div class="kpi-icon-container green"><i data-lucide="gem"></i></div>
+            </div>
+            <div class="kpi-value" id="kpi-ltv">$0</div>
+            <div class="kpi-footer">
+              <span class="kpi-trend positive" id="trend-ltv"><i data-lucide="arrow-up-right"></i> Strong</span>
+              <span class="kpi-context">Average projections</span>
+            </div>
+          </div>
+
+          <!-- Churn Rate KPI -->
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Monthly Churn Rate</span>
+              <div class="kpi-icon-container red"><i data-lucide="user-x"></i></div>
+            </div>
+            <div class="kpi-value" id="kpi-churn">0.0%</div>
+            <div class="kpi-footer">
+              <span class="kpi-trend negative" id="trend-churn"><i data-lucide="arrow-down-right"></i> -0.0%</span>
+              <span class="kpi-context">From previous month</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="charts-grid-2">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <h3 class="chart-card-title">MRR Growth Trend</h3>
+                <p class="chart-card-subtitle">24-month historical scaling of monthly recurring revenue</p>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="mrrChart"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <h3 class="chart-card-title">Subscription Tier Growth</h3>
+                <p class="chart-card-subtitle">Expansion of account counts grouped by subscription level</p>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="tiersChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================== TAB 2: REVENUE & PLANS ================== -->
+      <section class="tab-content" id="tab-subscriptions">
+        <div class="stats-grid">
+          <!-- ARR KPI -->
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Annual Recurring Revenue</span>
+              <div class="kpi-icon-container purple"><i data-lucide="trending-up"></i></div>
+            </div>
+            <div class="kpi-value" id="kpi-arr">$0</div>
+            <div class="kpi-footer">
+              <span class="kpi-trend positive" id="trend-arr"><i data-lucide="arrow-up-right"></i> Run Rate</span>
+              <span class="kpi-context">Current MRR × 12</span>
+            </div>
+          </div>
+          
+          <!-- ARPU KPI -->
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">ARPU (Average revenue per user)</span>
+              <div class="kpi-icon-container blue"><i data-lucide="wallet"></i></div>
+            </div>
+            <div class="kpi-value" id="kpi-arpu">$0</div>
+            <div class="kpi-footer">
+              <span class="kpi-trend positive" id="trend-arpu">Healthy</span>
+              <span class="kpi-context">Average across all plans</span>
+            </div>
+          </div>
+
+          <!-- CAC KPI -->
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Avg Acquisition Cost (CAC)</span>
+              <div class="kpi-icon-container yellow"><i data-lucide="user-plus"></i></div>
+            </div>
+            <div class="kpi-value" id="kpi-cac">$0</div>
+            <div class="kpi-footer">
+              <span class="kpi-trend neutral" id="trend-cac">Optimized</span>
+              <span class="kpi-context">Blended marketing spend</span>
+            </div>
+          </div>
+
+          <!-- LTV:CAC Ratio KPI -->
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">LTV : CAC Ratio</span>
+              <div class="kpi-icon-container green"><i data-lucide="gauge"></i></div>
+            </div>
+            <div class="kpi-value" id="kpi-ltvcac">0.0x</div>
+            <div class="kpi-footer">
+              <span class="kpi-trend positive" id="trend-ltvcac">Outstanding</span>
+              <span class="kpi-context">Recommended ratio > 3.0x</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="charts-grid-2">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <h3 class="chart-card-title">User Acquisition & Expansion</h3>
+                <p class="chart-card-subtitle">Comparison of monthly signups against total active database</p>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="userGrowthChart"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <h3 class="chart-card-title">Revenue Contribution by Tier</h3>
+                <p class="chart-card-subtitle">Proportion of Monthly Recurring Revenue generated by each plan</p>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="revenueShareChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================== TAB 3: RETENTION COHORTS ================== -->
+      <section class="tab-content" id="tab-retention">
+        <div class="stats-grid">
+          <!-- NRR KPI -->
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Net Revenue Retention (NRR)</span>
+              <div class="kpi-icon-container green"><i data-lucide="refresh-cw"></i></div>
+            </div>
+            <div class="kpi-value" id="kpi-nrr">0.0%</div>
+            <div class="kpi-footer">
+              <span class="kpi-trend positive" id="trend-nrr">Excellent</span>
+              <span class="kpi-context">Includes account upgrades</span>
+            </div>
+          </div>
+          
+          <!-- GRR KPI -->
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Gross Revenue Retention (GRR)</span>
+              <div class="kpi-icon-container blue"><i data-lucide="refresh-ccw"></i></div>
+            </div>
+            <div class="kpi-value" id="kpi-grr">0.0%</div>
+            <div class="kpi-footer">
+              <span class="kpi-trend neutral" id="trend-grr">Stable</span>
+              <span class="kpi-context">Excludes expansion upgrades</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <div class="kpi-card" style="border-left: 4px solid var(--accent-purple); padding: 18px 24px;">
+            <h4 style="font-family: var(--font-title); font-size: 15px; margin-bottom: 6px; color: white;">Understanding Cohort Retention Heatmaps</h4>
+            <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+              This heatmap tracks monthly customer cohorts (horizontal rows) over their subsequent lifecycle months (vertical columns). 
+              A steady decay is normal, but high-performance SaaS businesses seek a stable color block indicating customer retention stabilizing. 
+              <strong>Net Revenue Retention (NRR)</strong> above 100% indicates that expansion revenue from existing accounts outpaces losses from churn.
+            </p>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="chart-card-header" style="margin-bottom: 24px;">
+            <div>
+              <h3 class="chart-card-title">12-Month Cohort Customer Retention Matrix</h3>
+              <p class="chart-card-subtitle">Active cohort percentage retained by operational month</p>
+            </div>
+          </div>
+          <div class="cohort-table-wrapper">
+            <table class="cohort-table" id="cohortTable">
+              <thead>
+                <tr>
+                  <th style="text-align: left; padding-left: 16px;">Cohort Month</th>
+                  <th>Size</th>
+                  <th>M0</th>
+                  <th>M1</th>
+                  <th>M2</th>
+                  <th>M3</th>
+                  <th>M4</th>
+                  <th>M5</th>
+                  <th>M6</th>
+                  <th>M7</th>
+                  <th>M8</th>
+                  <th>M9</th>
+                  <th>M10</th>
+                  <th>M11</th>
+                  <th>M12</th>
+                </tr>
+              </thead>
+              <tbody id="cohortTableBody">
+                <!-- Javascript will load cohort rows here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================== TAB 4: CHURN PREDICTION ================== -->
+      <section class="tab-content" id="tab-churn">
+        <div class="stats-grid">
+          <!-- High Risk KPI -->
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">High Churn Risk Accounts</span>
+              <div class="kpi-icon-container red"><i data-lucide="shield-alert"></i></div>
+            </div>
+            <div class="kpi-value" id="kpi-risk-high">0</div>
+            <div class="kpi-footer">
+              <span class="kpi-trend negative"><i data-lucide="alert-circle"></i> Probability &gt; 70%</span>
+              <span class="kpi-context">Immediate review</span>
+            </div>
+          </div>
+          
+          <!-- Med Risk KPI -->
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Medium Churn Risk Accounts</span>
+              <div class="kpi-icon-container yellow"><i data-lucide="alert-triangle"></i></div>
+            </div>
+            <div class="kpi-value" id="kpi-risk-med">0</div>
+            <div class="kpi-footer">
+              <span class="kpi-trend neutral"><i data-lucide="help-circle"></i> Prob 35% - 70%</span>
+              <span class="kpi-context">Nurture focus</span>
+            </div>
+          </div>
+
+          <!-- Low Risk KPI -->
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Healthy (Low Risk) Accounts</span>
+              <div class="kpi-icon-container green"><i data-lucide="shield-check"></i></div>
+            </div>
+            <div class="kpi-value" id="kpi-risk-low">0</div>
+            <div class="kpi-footer">
+              <span class="kpi-trend positive"><i data-lucide="heart"></i> Prob &lt; 35%</span>
+              <span class="kpi-context">Highly engaged</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="churn-summary-grid">
+          <div class="chart-card radar-chart-card">
+            <div class="chart-card-header">
+              <div>
+                <h3 class="chart-card-title">Churn Risk Factors</h3>
+                <p class="chart-card-subtitle">Distribution of primary root causes of critical high-risk flags</p>
+              </div>
+            </div>
+            <div class="factor-bar-list" id="factorBars">
+              <!-- Dynamically populated from JS -->
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <h3 class="chart-card-title">Risk Category Breakdown</h3>
+                <p class="chart-card-subtitle">Distribution of currently active subscribers by churn probability tier</p>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="riskDistributionChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIONABLE HIGH RISK CUSTOMERS TABLE -->
+        <div class="table-card">
+          <div class="table-header-controls">
+            <div>
+              <h3 class="chart-card-title">Actionable Customer Churn Risk List</h3>
+              <p class="chart-card-subtitle">Top accounts sorted by model churn probability (high risk prioritized first)</p>
+            </div>
+            
+            <div class="filter-wrapper">
+              <div class="search-wrapper">
+                <i data-lucide="search"></i>
+                <input type="text" class="search-input" id="searchCustomer" placeholder="Search customer or company...">
+              </div>
+              <select class="select-filter" id="filterTier">
+                <option value="All">All Plans</option>
+                <option value="Starter">Starter</option>
+                <option value="Professional">Professional</option>
+                <option value="Enterprise">Enterprise</option>
+              </select>
+              <select class="select-filter" id="filterRisk">
+                <option value="All">All Risk Tiers</option>
+                <option value="High Risk">High Risk</option>
+                <option value="Medium Risk">Medium Risk</option>
+                <option value="Low Risk">Low Risk</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="customer-table-wrapper">
+            <table class="customer-table" id="customerTable">
+              <thead>
+                <tr>
+                  <th>Customer ID</th>
+                  <th>Account Contact</th>
+                  <th>Subscription Tier</th>
+                  <th style="text-align: center;">Active Days (30d)</th>
+                  <th style="text-align: center;">Tickets (30d)</th>
+                  <th style="text-align: center;">Failed billing</th>
+                  <th style="text-align: center;">Tenure</th>
+                  <th style="text-align: right;">Risk Probability</th>
+                  <th style="text-align: center; padding-right: 16px;">Status Badge</th>
+                </tr>
+              </thead>
+              <tbody id="customerTableBody">
+                <!-- Javascript will load customer list dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================== TAB 5: WHAT-IF SCENARIO PLANNER ================== -->
+      <section class="tab-content" id="tab-whatif">
+        <div class="whatif-grid">
+          <!-- Controls Panel -->
+          <div class="whatif-controls-card">
+            <div>
+              <h3 class="chart-card-title" style="margin-bottom: 8px;">Strategic Growth Controls</h3>
+              <p class="chart-card-subtitle" style="line-height: 1.4;">Adjust pricing and retention parameters below to simulate changes to your projected 12-month MRR curve.</p>
+            </div>
+
+            <!-- Price Adjustment -->
+            <div class="slider-group purple">
+              <div class="slider-label-row">
+                <span class="slider-name">Plan Price Adjustment</span>
+                <span class="slider-val" id="val-price">0%</span>
+              </div>
+              <input type="range" class="slider-input" id="sliderPrice" min="-20" max="40" step="5" value="0">
+              <p style="font-size: 10px; color: var(--text-muted);">Simulate raising or lowering monthly tier prices.</p>
+            </div>
+
+            <!-- Churn Rate Mitigation -->
+            <div class="slider-group red">
+              <div class="slider-label-row">
+                <span class="slider-name">Churn Mitigation Plan</span>
+                <span class="slider-val" id="val-churn">0%</span>
+              </div>
+              <input type="range" class="slider-input" id="sliderChurn" min="0" max="60" step="5" value="0">
+              <p style="font-size: 10px; color: var(--text-muted);">Mitigate user cancellations through engagement features.</p>
+            </div>
+
+            <!-- Marketing CAC Optimization -->
+            <div class="slider-group green">
+              <div class="slider-label-row">
+                <span class="slider-name">Marketing CAC Optimization</span>
+                <span class="slider-val" id="val-cac">0%</span>
+              </div>
+              <input type="range" class="slider-input" id="sliderCac" min="-30" max="30" step="5" value="0">
+              <p style="font-size: 10px; color: var(--text-muted);">Lowering CAC allows hiring more channels for equivalent budget.</p>
+            </div>
+
+            <hr style="border: none; border-bottom: 1px solid var(--border-glass); margin: 8px 0;">
+
+            <!-- Scenario Result Cards inside controls -->
+            <div>
+              <h4 style="font-family: var(--font-title); font-size: 13px; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary);">12-Month Projections Result</h4>
+              <div class="scenario-stats">
+                <div class="scen-stat-card">
+                  <div class="scen-stat-title">Optimized MRR</div>
+                  <div class="scen-stat-value" id="scen-mrr">$0</div>
+                  <div class="scen-stat-change plus" id="scen-mrr-diff">+0.0%</div>
+                </div>
+                <div class="scen-stat-card">
+                  <div class="scen-stat-title">Optimized ARR</div>
+                  <div class="scen-stat-value" id="scen-arr">$0</div>
+                  <div class="scen-stat-change plus" id="scen-arr-diff">+$0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chart Visualizer Panel -->
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <h3 class="chart-card-title">Strategic MRR Projection Curve</h3>
+                <p class="chart-card-subtitle">Comparison of optimized pricing/retention trajectory against the current baseline over 12 months</p>
+              </div>
+            </div>
+            <div class="chart-container" style="min-height: 380px;">
+              <canvas id="whatIfChart"></canvas>
+            </div>
+            <div style="margin-top: 15px; background: rgba(14, 165, 233, 0.03); border: 1px solid var(--border-glass-glow-blue); border-radius: 12px; padding: 14px 18px;">
+              <p style="font-size: 12px; color: var(--accent-blue); line-height: 1.5; display: flex; gap: 8px; align-items: flex-start;">
+                <i data-lucide="info" style="width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px;"></i>
+                <span>
+                  <strong>Management Strategy:</strong> A 15% reduction in user churn accompanied by a minor 10% price optimization on the Professional tier is historically proven to deliver a compound 3.8x increase in overall enterprise LTV without increasing acquisition overhead.
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
