@@ -13,8 +13,97 @@ let saasData = null;
 document.addEventListener('DOMContentLoaded', () => {
   setupUserProfile();
   setupTabNavigation();
-  fetchDashboardData();
+  setupDatasetUpload();
 });
+
+function setupDatasetUpload() {
+  const uploadScreen = document.getElementById('uploadScreen');
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('fileInput');
+  const browseLink = document.getElementById('browseLink');
+  const loadDemoBtn = document.getElementById('loadDemoBtn');
+
+  // Trigger input selection on browse link click
+  browseLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    fileInput.click();
+  });
+
+  // Dropzone click trigger
+  dropzone.addEventListener('click', (e) => {
+    if (e.target !== browseLink) {
+      fileInput.click();
+    }
+  });
+
+  // Drag over class toggle
+  dropzone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('dragover');
+  });
+
+  dropzone.addEventListener('dragleave', () => {
+    dropzone.classList.remove('dragover');
+  });
+
+  // Handle dropped files
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('dragover');
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleUploadedFile(files[0]);
+    }
+  });
+
+  // Handle file picker selection
+  fileInput.addEventListener('change', (e) => {
+    const files = e.target.files;
+    if (files.length > 0) {
+      handleUploadedFile(files[0]);
+    }
+  });
+
+  // Load default demo file from server
+  loadDemoBtn.addEventListener('click', () => {
+    fetchDashboardData();
+  });
+}
+
+function handleUploadedFile(file) {
+  if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
+    alert('Please upload a valid dashboard_data.json file.');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      
+      // Simple structure validation
+      if (!data.overall_stats || !data.monthly_metrics || !data.cohort_matrix || !data.churn_prediction) {
+        throw new Error('Invalid dataset structure. Use analyzer.py generated JSON.');
+      }
+      
+      // Hydrate dashboard
+      saasData = data;
+      hydrateKPIs(data);
+      initializeAllCharts(data);
+      renderCohortHeatmap(data.cohort_matrix);
+      renderChurnPredictionDetails(data.churn_prediction);
+      initializeWhatIfPlanner(data);
+
+      // Hide upload overlay
+      document.getElementById('uploadScreen').classList.add('hidden');
+      document.getElementById('welcomeSubtext').innerText = `SaaS Platform Intelligence Engine • Loaded: ${file.name}`;
+    } catch (err) {
+      alert('Error parsing dataset: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
 
 function setupUserProfile() {
   const name = localStorage.getItem('saas_user_name') || 'SaaS Admin';
@@ -116,6 +205,9 @@ function fetchDashboardData() {
       renderCohortHeatmap(data.cohort_matrix);
       renderChurnPredictionDetails(data.churn_prediction);
       initializeWhatIfPlanner(data);
+      
+      // Hide upload overlay
+      document.getElementById('uploadScreen').classList.add('hidden');
       
       // Update loading status
       document.getElementById('welcomeSubtext').innerText = 'SaaS Platform Intelligence Engine • Real-time Metrics Loaded';
