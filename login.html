@@ -222,7 +222,7 @@
       lucide.createIcons();
     });
 
-    function runSimulatedAuth(authMethod) {
+    function runSimulatedAuth(authMethod, customName, customEmail) {
       authOverlay.classList.add('active');
       spinner.style.display = 'block';
       successCheckmark.style.display = 'none';
@@ -247,8 +247,8 @@
         if (authMethod === 'Google') {
           authText.innerText = 'Google session established. Redirecting...';
           localStorage.setItem('saas_token', 'google_jwt_token_aether_983274');
-          localStorage.setItem('saas_user_name', 'Chethan Kalyan');
-          localStorage.setItem('saas_user_email', 'chethan.kalyan@gmail.com');
+          localStorage.setItem('saas_user_name', customName || 'Chethan Kalyan');
+          localStorage.setItem('saas_user_email', customEmail || 'chethan.kalyan@gmail.com');
           localStorage.setItem('saas_user_pic', 'google');
         } else if (authMethod === 'Signup') {
           const registeredName = fullNameInput.value;
@@ -284,7 +284,17 @@
     });
 
     googleBtn.addEventListener('click', () => {
-      runSimulatedAuth('Google');
+      let email = prompt("Enter your Google email to simulate authentication:", "trainer@gmail.com");
+      if (email === null) return; // User cancelled prompt
+      if (!email.trim()) {
+        email = "trainer@gmail.com";
+      }
+      
+      // Extract name from email (e.g. john.doe@gmail.com -> John Doe)
+      let name = email.split('@')[0];
+      name = name.replace(/[\._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+      
+      runSimulatedAuth('Google', name, email);
     });
   </script>
 </body>
